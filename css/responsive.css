@@ -100,8 +100,9 @@ html, body {
 
   /* Navbar */
   .navbar__links,
-  .navbar__cta {
-    display: none;
+  .navbar__cta,
+  .nav-user-menu {
+    display: none !important;
   }
 
   .navbar__hamburger {
