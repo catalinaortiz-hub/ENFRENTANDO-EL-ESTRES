@@ -33,11 +33,8 @@ const AppModule = (() => {
     _initSectionObserver();
     _initParticles();
     _initActiveNavHighlight();
-
-    // Init sub-modules
-    if (typeof TasksModule     !== 'undefined') TasksModule.init();
-    if (typeof MultimediaModule !== 'undefined') MultimediaModule.init();
-    if (typeof GameLoaderModule !== 'undefined') GameLoaderModule.init();
+    // Sub-modules (TasksModule, MultimediaModule, GameLoaderModule)
+    // are initialized by AuthModule after a successful login.
   }
 
   /* ─── NAVBAR ─────────────────────────────────────────────────── */

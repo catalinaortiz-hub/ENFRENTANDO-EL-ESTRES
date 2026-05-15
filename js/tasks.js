@@ -28,6 +28,9 @@ const TasksModule = (() => {
   // Current priority being set for new tasks
   let currentPriority = 'medium';
 
+  // ID of task being edited (null = mode "add")
+  let editingTaskId = null;
+
   /* ─── DOM REFS ───────────────────────────────────────────────── */
   let DOM = {};
 
@@ -135,9 +138,17 @@ const TasksModule = (() => {
 
     // Clear completed
     DOM.clearBtn.addEventListener('click', _clearCompleted);
+
+    // Cancel edit button
+    document.getElementById('cancel-edit-btn')?.addEventListener('click', _cancelEdit);
+
+    // Cancel edit (ESC key)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && editingTaskId) _cancelEdit();
+    });
   }
 
-  /* ─── HANDLE ADD ─────────────────────────────────────────────── */
+  /* ─── HANDLE ADD / SAVE EDIT ─────────────────────────────────── */
   function _handleAdd() {
     const text = DOM.input.value.trim();
 
@@ -152,12 +163,29 @@ const TasksModule = (() => {
       return;
     }
 
+    // ── EDIT MODE ──
+    if (editingTaskId) {
+      const task = tasks.find(t => t.id === editingTaskId);
+      if (task) {
+        task.text     = text;
+        task.category = DOM.categorySelect?.value || task.category;
+        task.priority = currentPriority;
+        task.dueDate  = DOM.dueDateInput?.value || null;
+      }
+      _cancelEdit();
+      _saveToStorage();
+      _render();
+      window.AppModule?.toast('Tarea actualizada.', 'success');
+      return;
+    }
+
+    // ── ADD MODE ──
     const newTask = {
       id:        _uid(),
       text,
       category:  DOM.categorySelect?.value || 'otro',
       priority:  currentPriority,
-      dueDate:   DOM.dueDateInput?.value || null,  // ISO date string or null
+      dueDate:   DOM.dueDateInput?.value || null,
       completed: false,
       createdAt: Date.now(),
     };
@@ -172,6 +200,60 @@ const TasksModule = (() => {
     DOM.input.focus();
 
     window.AppModule?.toast('Tarea agregada correctamente.', 'success');
+  }
+
+  /* ─── EDIT TASK ──────────────────────────────────────────────── */
+  function _editTask(id) {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+
+    editingTaskId = id;
+
+    // Rellenar formulario con datos de la tarea
+    DOM.input.value = task.text;
+    if (DOM.categorySelect) DOM.categorySelect.value = task.category;
+    if (DOM.dueDateInput)   DOM.dueDateInput.value   = task.dueDate || '';
+
+    // Seleccionar prioridad
+    currentPriority = task.priority;
+    DOM.priorityBtns.forEach(b => {
+      const match = b.dataset.priority === task.priority;
+      b.classList.toggle('selected', match);
+      b.setAttribute('aria-pressed', match ? 'true' : 'false');
+    });
+
+    // Cambiar botón a "Guardar cambios" y mostrar cancel
+    DOM.addBtn.textContent = 'Guardar cambios';
+    DOM.addBtn.classList.add('btn--editing');
+
+    // Mostrar botón cancelar si existe
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+    if (cancelBtn) cancelBtn.style.display = 'flex';
+
+    // Scroll al formulario y enfocar
+    DOM.input.focus();
+    document.querySelector('.tasks__input-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ─── CANCEL EDIT ────────────────────────────────────────────── */
+  function _cancelEdit() {
+    editingTaskId = null;
+    DOM.input.value = '';
+    if (DOM.dueDateInput) DOM.dueDateInput.value = '';
+    if (DOM.categorySelect) DOM.categorySelect.value = 'academica';
+
+    currentPriority = 'medium';
+    DOM.priorityBtns.forEach(b => {
+      const match = b.dataset.priority === 'medium';
+      b.classList.toggle('selected', match);
+      b.setAttribute('aria-pressed', match ? 'true' : 'false');
+    });
+
+    DOM.addBtn.textContent = 'Agregar Tarea';
+    DOM.addBtn.classList.remove('btn--editing');
+
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+    if (cancelBtn) cancelBtn.style.display = 'none';
   }
 
   /* ─── TOGGLE COMPLETE ────────────────────────────────────────── */
@@ -295,14 +377,22 @@ const TasksModule = (() => {
           ${dueDateHTML}
         </div>
       </div>
-      <button class="task-item__delete" aria-label="Eliminar tarea" title="Eliminar">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
-      </button>
+      <div class="task-item__actions">
+        <button class="task-item__edit" aria-label="Editar tarea" title="Editar">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M9.5 1.5l3 3L4 13H1v-3L9.5 1.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="task-item__delete" aria-label="Eliminar tarea" title="Eliminar">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
     `;
 
     li.querySelector('.task-item__checkbox').addEventListener('click', () => _toggleComplete(task.id));
+    li.querySelector('.task-item__edit').addEventListener('click', () => _editTask(task.id));
     li.querySelector('.task-item__delete').addEventListener('click', () => _deleteTask(task.id));
 
     return li;
