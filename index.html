@@ -16,6 +16,168 @@
 </head>
 <body>
 
+  <!-- ══════════════════════════════════════════════
+       ONBOARDING OVERLAY
+  ══════════════════════════════════════════════ -->
+  <div class="ob-overlay" id="onboarding-overlay" aria-modal="true" role="dialog" aria-label="Bienvenida">
+
+    <!-- SLIDE 1 — Splash -->
+    <div class="ob-slide ob-slide--active ob-slide--splash" data-slide="0">
+      <div class="ob-slide__inner">
+        <div class="ob-logo-wrap">
+          <div class="ob-logo-icon">✦</div>
+        </div>
+        <h1 class="ob-title">Enfrentando el<br/><strong>Estrés</strong></h1>
+        <p class="ob-tagline">Organiza, relájate, avanza</p>
+        <button class="ob-cta-btn" data-ob-next>Comenzar →</button>
+        <p class="ob-stats-line">+3 módulos · Proyecto UAO · Ingeniería Multimedia</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 2 — Features -->
+    <div class="ob-slide ob-slide--features" data-slide="1">
+      <div class="ob-slide__inner">
+        <div class="ob-emoji-icon">📋</div>
+        <h2 class="ob-slide__title">Organiza tu vida<br/>académica</h2>
+        <p class="ob-slide__desc">Agrega, prioriza y filtra tus actividades. Tu progreso se guarda automáticamente.</p>
+        <div class="ob-features-grid">
+          <div class="ob-feature-chip">
+            <span>🏷️</span> Hasta 4 categorías
+          </div>
+          <div class="ob-feature-chip">
+            <span>⚡</span> 3 niveles de prioridad
+          </div>
+          <div class="ob-feature-chip">
+            <span>📅</span> Fechas de vencimiento
+          </div>
+        </div>
+        <button class="ob-cta-btn ob-cta-btn--outline" data-ob-next>Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 — Wellness -->
+    <div class="ob-slide ob-slide--wellness" data-slide="2">
+      <div class="ob-slide__inner">
+        <div class="ob-emoji-icon">🌊</div>
+        <h2 class="ob-slide__title">Bienestar en cada<br/>pausa</h2>
+        <p class="ob-slide__desc">Videos relajantes y un mini juego diseñados para aliviar el estrés entre clases.</p>
+        <div class="ob-features-grid">
+          <div class="ob-feature-chip">
+            <span>🎬</span> Videos relajantes
+          </div>
+          <div class="ob-feature-chip">
+            <span>🎮</span> Wave Catcher
+          </div>
+          <div class="ob-feature-chip">
+            <span>✨</span> Impacto positivo
+          </div>
+        </div>
+        <button class="ob-cta-btn" data-ob-next>¡Empezar ahora!</button>
+      </div>
+    </div>
+
+    <!-- Dots de navegación -->
+    <div class="ob-dots" aria-label="Navegación de slides">
+      <button class="ob-dot ob-dot--active" aria-label="Slide 1"></button>
+      <button class="ob-dot" aria-label="Slide 2"></button>
+      <button class="ob-dot" aria-label="Slide 3"></button>
+    </div>
+
+    <!-- Saltar -->
+    <button class="ob-skip-btn" data-ob-skip aria-label="Saltar introducción">Saltar</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       AUTH OVERLAY (Login / Registro)
+  ══════════════════════════════════════════════ -->
+  <div class="auth-overlay" id="auth-overlay" aria-modal="true" role="dialog" aria-label="Iniciar sesión">
+    <div class="auth-card glass-card">
+
+      <div class="auth-header">
+        <div class="auth-logo">
+          <span class="auth-logo__icon">✦</span>
+        </div>
+        <h2 class="auth-app-name">Enfrentando el <strong>Estrés</strong></h2>
+        <p class="auth-subtitle">Tu espacio de organización y bienestar</p>
+      </div>
+
+      <!-- FORMULARIO LOGIN -->
+      <form class="auth-form" id="login-form" novalidate>
+        <h3 class="auth-form__title">Iniciar sesión</h3>
+
+        <div class="auth-input-group">
+          <label for="login-email">Correo electrónico</label>
+          <input type="email" id="login-email" placeholder="tu@correo.com" autocomplete="email" />
+        </div>
+
+        <div class="auth-input-group">
+          <label for="login-password">Contraseña</label>
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+
+        <p class="auth-error" id="login-error"></p>
+
+        <button type="button" class="btn btn--primary btn--full btn--glow" id="login-submit-btn">
+          Entrar
+        </button>
+
+        <p class="auth-toggle-text">
+          ¿No tienes cuenta?
+          <button type="button" class="auth-toggle-btn" id="to-register-btn">Regístrate</button>
+        </p>
+
+        <div class="auth-demo-hint">
+          <span class="auth-demo-hint__label">Cuenta demo</span>
+          <button type="button" class="auth-demo-hint__fill" id="fill-demo-btn">
+            demo@uao.edu.co · estres123
+          </button>
+        </div>
+      </form>
+
+      <!-- FORMULARIO REGISTRO -->
+      <form class="auth-form auth-form--hidden" id="register-form" novalidate>
+        <h3 class="auth-form__title">Crear cuenta</h3>
+
+        <div class="auth-input-group">
+          <label for="register-name">Nombre</label>
+          <input type="text" id="register-name" placeholder="Tu nombre" autocomplete="name" />
+        </div>
+
+        <div class="auth-input-group">
+          <label for="register-email">Correo electrónico</label>
+          <input type="email" id="register-email" placeholder="tu@correo.com" autocomplete="email" />
+        </div>
+
+        <div class="auth-input-group">
+          <label for="register-password">Contraseña</label>
+          <input type="password" id="register-password" placeholder="Mínimo 6 caracteres" autocomplete="new-password" />
+        </div>
+
+        <div class="auth-input-group">
+          <label for="register-password2">Confirmar contraseña</label>
+          <input type="password" id="register-password2" placeholder="Repite tu contraseña" autocomplete="new-password" />
+        </div>
+
+        <p class="auth-error" id="register-error"></p>
+
+        <button type="button" class="btn btn--primary btn--full btn--glow" id="register-submit-btn">
+          Crear cuenta
+        </button>
+
+        <p class="auth-toggle-text">
+          ¿Ya tienes cuenta?
+          <button type="button" class="auth-toggle-btn" id="to-login-btn">Inicia sesión</button>
+        </p>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       MAIN APP (oculta hasta login)
+  ══════════════════════════════════════════════ -->
+  <div id="main-app" class="main-app">
+
   <!-- CANVAS DE PARTÍCULAS DE FONDO -->
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
@@ -41,6 +203,12 @@
       <!-- CTA -->
       <a href="#tasks" class="navbar__cta btn btn--glow">Comenzar</a>
 
+      <!-- User menu (visible tras login) -->
+      <div class="nav-user-menu hidden" id="nav-user-menu">
+        <span class="nav-user-name" id="nav-user-name"></span>
+        <button class="nav-logout-btn" id="logout-btn" aria-label="Cerrar sesión">Salir</button>
+      </div>
+
       <!-- Hamburger (mobile) -->
       <button class="navbar__hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -54,6 +222,11 @@
         <li><a href="#multimedia" class="navbar__link" data-section="multimedia">Relajación</a></li>
         <li><a href="#game"       class="navbar__link" data-section="game">Mini Juego</a></li>
       </ul>
+      <!-- Usuario + Salir en móvil -->
+      <div class="navbar__mobile-user hidden" id="mobile-user-menu">
+        <span class="navbar__mobile-user-name" id="mobile-user-name"></span>
+        <button class="nav-logout-btn" id="logout-btn-mobile">Salir</button>
+      </div>
     </div>
   </nav>
 
@@ -197,6 +370,9 @@
 
             <button id="add-task-btn" class="btn btn--primary btn--full btn--glow" aria-label="Agregar tarea">
               Agregar Tarea
+            </button>
+            <button id="cancel-edit-btn" class="btn btn--ghost btn--full" aria-label="Cancelar edición" style="display:none;">
+              Cancelar edición
             </button>
           </div>
 
@@ -651,14 +827,14 @@
   <!-- Toast notifications -->
   <div class="toast-container" id="toast-container" role="status" aria-live="polite" aria-atomic="false"></div>
 
+  </div><!-- /#main-app -->
+
   <!-- Scripts (order matters) -->
   <script src="js/tasks.js"></script>
   <script src="js/multimedia.js"></script>
   <script src="js/game-loader.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
 
 </body>
 </html>
-<!-- prueba -->
-
-
