@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enfrentando el Estrés — UAO Multimedia</title>
+
+  <!-- Google Fonts: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+  <!-- CANVAS DE PARTÍCULAS DE FONDO -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- ══════════════════════════════════════════════
+       1. NAVBAR
+  ══════════════════════════════════════════════ -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Navegación principal">
+    <div class="navbar__container">
+
+      <!-- Logo -->
+      <a href="#hero" class="navbar__logo" aria-label="Inicio">
+        <span class="navbar__logo-icon" aria-hidden="true">✦</span>
+        <span class="navbar__logo-text">Enfrentando el <strong>Estrés</strong></span>
+      </a>
+
+      <!-- Links -->
+      <ul class="navbar__links" id="navbar-links" role="list">
+        <li><a href="#tasks"      class="navbar__link" data-section="tasks">Mis Tareas</a></li>
+        <li><a href="#multimedia" class="navbar__link" data-section="multimedia">Relajación</a></li>
+        <li><a href="#game"       class="navbar__link" data-section="game">Mini Juego</a></li>
+      </ul>
+
+      <!-- CTA -->
+      <a href="#tasks" class="navbar__cta btn btn--glow">Comenzar</a>
+
+      <!-- Hamburger (mobile) -->
+      <button class="navbar__hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <div class="navbar__mobile" id="mobile-menu" aria-hidden="true">
+      <ul role="list">
+        <li><a href="#tasks"      class="navbar__link" data-section="tasks">Mis Tareas</a></li>
+        <li><a href="#multimedia" class="navbar__link" data-section="multimedia">Relajación</a></li>
+        <li><a href="#game"       class="navbar__link" data-section="game">Mini Juego</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════
+       2. HERO
+  ══════════════════════════════════════════════ -->
+  <section class="hero" id="hero" aria-labelledby="hero-title">
+
+    <!-- Decorative orbs -->
+    <div class="hero__orb hero__orb--1" aria-hidden="true"></div>
+    <div class="hero__orb hero__orb--2" aria-hidden="true"></div>
+    <div class="hero__orb hero__orb--3" aria-hidden="true"></div>
+
+    <div class="hero__content">
+      <div class="hero__badge">Ingeniería Multimedia · UAO</div>
+      <h1 class="hero__title" id="hero-title">
+        Enfrenta el<br />
+        <span class="hero__title-accent">Estrés</span><br />
+        <span class="hero__title-sub">con calma y claridad</span>
+      </h1>
+      <p class="hero__desc">
+        Una plataforma pensada para estudiantes que necesitan organizar sus
+        actividades, relajarse con contenido multimedia y disfrutar de un
+        momento de paz entre clases.
+      </p>
+      <div class="hero__actions">
+        <a href="#tasks"      class="btn btn--primary btn--glow">Organizar Tareas</a>
+        <a href="#multimedia" class="btn btn--ghost">Relajarme</a>
+      </div>
+
+      <!-- Stats cards -->
+      <div class="hero__stats">
+        <div class="hero__stat glass">
+          <span class="hero__stat-number" id="stat-pending">0</span>
+          <span class="hero__stat-label">Tareas pendientes</span>
+        </div>
+        <div class="hero__stat glass">
+          <span class="hero__stat-number" id="stat-done">0</span>
+          <span class="hero__stat-label">Completadas</span>
+        </div>
+        <div class="hero__stat glass">
+          <span class="hero__stat-number">3</span>
+          <span class="hero__stat-label">Módulos activos</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero visual -->
+    <div class="hero__visual" aria-hidden="true">
+      <div class="hero__visual-ring hero__visual-ring--1"></div>
+      <div class="hero__visual-ring hero__visual-ring--2"></div>
+      <div class="hero__visual-ring hero__visual-ring--3"></div>
+      <div class="hero__visual-core">
+        <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
+          <circle cx="28" cy="28" r="22" stroke="#6EE7FF" stroke-width="1.5" opacity="0.6"/>
+          <path d="M28 8 C18 16 10 22 10 30 C10 40 18 48 28 48 C38 48 46 40 46 30 C46 22 38 16 28 8Z" fill="url(#waveGrad)" opacity="0.85"/>
+          <path d="M16 34 Q22 28 28 34 Q34 40 40 34" stroke="#6EE7FF" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M14 28 Q20 22 26 28 Q32 34 38 28" stroke="#C084FC" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <defs>
+            <linearGradient id="waveGrad" x1="28" y1="8" x2="28" y2="48" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5B4BDB" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#6EE7FF" stop-opacity="0.3"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="hero__visual-dots">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="hero__scroll" aria-label="Desplazar hacia abajo">
+      <span class="hero__scroll-line"></span>
+      <span class="hero__scroll-text">Explorar</span>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       3. GESTIÓN DE TAREAS
+  ══════════════════════════════════════════════ -->
+  <section class="tasks" id="tasks" aria-labelledby="tasks-title">
+    <div class="section-container">
+
+      <header class="section-header">
+        <div class="section-header__badge">Organización</div>
+        <h2 class="section-header__title" id="tasks-title">Gestión de Tareas</h2>
+        <p class="section-header__desc">Organiza tus actividades académicas y personales. Tu progreso se guarda automáticamente.</p>
+      </header>
+
+      <div class="tasks__layout">
+
+        <!-- Input panel -->
+        <div class="tasks__input-panel glass-card">
+          <h3 class="tasks__panel-title">Nueva Tarea</h3>
+
+          <div class="tasks__form" role="form" aria-label="Agregar tarea">
+
+            <div class="input-group">
+              <label class="input-group__label" for="task-input">Descripción</label>
+              <input
+                type="text"
+                id="task-input"
+                class="input-group__field"
+                placeholder="¿Qué necesitas hacer?"
+                maxlength="120"
+                autocomplete="off"
+                aria-required="true"
+              />
+            </div>
+
+            <div class="input-group">
+              <label class="input-group__label" for="task-category">Categoría</label>
+              <select id="task-category" class="input-group__field input-group__select">
+                <option value="academica">Académica</option>
+                <option value="personal">Personal</option>
+                <option value="proyecto">Proyecto</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label class="input-group__label" for="task-due-date">Fecha de vencimiento</label>
+              <input
+                type="date"
+                id="task-due-date"
+                class="input-group__field input-group__date"
+                aria-label="Fecha de vencimiento de la tarea"
+              />
+            </div>
+
+            <div class="input-group">
+              <label class="input-group__label" for="task-priority">Prioridad</label>
+              <div class="priority-selector" id="task-priority" role="group" aria-label="Seleccionar prioridad">
+                <button type="button" class="priority-btn priority-btn--low"    data-priority="low"    aria-pressed="false">Baja</button>
+                <button type="button" class="priority-btn priority-btn--medium" data-priority="medium" aria-pressed="true">Media</button>
+                <button type="button" class="priority-btn priority-btn--high"   data-priority="high"   aria-pressed="false">Alta</button>
+              </div>
+            </div>
+
+            <button id="add-task-btn" class="btn btn--primary btn--full btn--glow" aria-label="Agregar tarea">
+              Agregar Tarea
+            </button>
+          </div>
+
+          <!-- Progress -->
+          <div class="tasks__progress">
+            <div class="tasks__progress-header">
+              <span>Progreso del día</span>
+              <span id="progress-text">0 / 0</span>
+            </div>
+            <div class="tasks__progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso de tareas">
+              <div class="tasks__progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tasks list -->
+        <div class="tasks__list-panel">
+
+          <!-- Advanced Filters -->
+          <div class="tasks__filters-panel glass-card">
+
+            <div class="tasks__filters-row">
+              <!-- Status filter -->
+              <div class="tasks__filter-group">
+                <span class="tasks__filter-label">Estado</span>
+                <div class="tasks__filters" role="group" aria-label="Filtro por estado">
+                  <button class="filter-btn filter-btn--active" data-filter="all"       aria-pressed="true">Todas</button>
+                  <button class="filter-btn"                    data-filter="pending"   aria-pressed="false">Pendientes</button>
+                  <button class="filter-btn"                    data-filter="completed" aria-pressed="false">Completadas</button>
+                </div>
+              </div>
+
+              <!-- Category filter -->
+              <div class="tasks__filter-group">
+                <span class="tasks__filter-label">Categoría</span>
+                <div class="tasks__filters tasks__filters--category" role="group" aria-label="Filtro por categoría">
+                  <button class="filter-btn filter-cat-btn filter-btn--active" data-category="all" aria-pressed="true">Todas</button>
+                  <button class="filter-btn filter-cat-btn" data-category="academica" aria-pressed="false">Académica</button>
+                  <button class="filter-btn filter-cat-btn" data-category="personal"  aria-pressed="false">Personal</button>
+                  <button class="filter-btn filter-cat-btn" data-category="proyecto"  aria-pressed="false">Proyecto</button>
+                  <button class="filter-btn filter-cat-btn" data-category="otro"      aria-pressed="false">Otro</button>
+                </div>
+              </div>
+
+              <!-- Priority filter -->
+              <div class="tasks__filter-group">
+                <span class="tasks__filter-label">Prioridad</span>
+                <div class="tasks__filters tasks__filters--priority" role="group" aria-label="Filtro por prioridad">
+                  <button class="filter-btn filter-pri-btn filter-btn--active" data-priority-filter="all"    aria-pressed="true">Todas</button>
+                  <button class="filter-btn filter-pri-btn" data-priority-filter="low"    aria-pressed="false">Baja</button>
+                  <button class="filter-btn filter-pri-btn" data-priority-filter="medium" aria-pressed="false">Media</button>
+                  <button class="filter-btn filter-pri-btn" data-priority-filter="high"   aria-pressed="false">Alta</button>
+                </div>
+              </div>
+
+              <!-- Date filter -->
+              <div class="tasks__filter-group">
+                <span class="tasks__filter-label">Fecha</span>
+                <div class="tasks__filters tasks__filters--date" role="group" aria-label="Filtro por fecha">
+                  <button class="filter-btn filter-date-btn filter-btn--active" data-date-filter="all"      aria-pressed="true">Todas</button>
+                  <button class="filter-btn filter-date-btn" data-date-filter="today"    aria-pressed="false">Hoy</button>
+                  <button class="filter-btn filter-date-btn" data-date-filter="upcoming" aria-pressed="false">Próximas</button>
+                  <button class="filter-btn filter-date-btn" data-date-filter="overdue"  aria-pressed="false">Vencidas</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Task count + clear -->
+          <div class="tasks__count" aria-live="polite">
+            <span id="task-count-display">0 tareas</span>
+            <button class="tasks__clear-btn" id="clear-completed-btn" aria-label="Eliminar completadas">Limpiar completadas</button>
+          </div>
+
+          <!-- List -->
+          <ul class="tasks__list" id="tasks-list" role="list" aria-label="Lista de tareas" aria-live="polite">
+            <!-- Tasks injected by JS -->
+          </ul>
+
+          <!-- Empty state -->
+          <div class="tasks__empty" id="tasks-empty" aria-hidden="true">
+            <div class="tasks__empty-icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <rect x="8" y="12" width="32" height="28" rx="4" stroke="#6EE7FF" stroke-width="1.5" stroke-opacity="0.4"/>
+                <path d="M16 20h16M16 26h10" stroke="#6EE7FF" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.4"/>
+                <path d="M24 6v6" stroke="#C084FC" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.5"/>
+              </svg>
+            </div>
+            <p class="tasks__empty-title">Sin tareas aún</p>
+            <p class="tasks__empty-desc">Agrega tu primera actividad para comenzar a organizar tu día.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       4. MULTIMEDIA RELAJANTE
+  ══════════════════════════════════════════════ -->
+  <section class="multimedia" id="multimedia" aria-labelledby="multimedia-title">
+    <div class="section-container">
+
+      <header class="section-header">
+        <div class="section-header__badge">Bienestar</div>
+        <h2 class="section-header__title" id="multimedia-title">Espacio de Relajación</h2>
+        <p class="section-header__desc">Videos relajantes para pausar, respirar y volver con más energía.</p>
+      </header>
+
+      <div class="multimedia__grid">
+
+        <!-- VIDEO 1 -->
+        <div class="media-card media-card--video glass-card" id="media-video-1">
+          <div class="media-card__badge">Video · Naturaleza</div>
+          <div class="media-card__preview" aria-label="Vista previa: Paisajes oceánicos">
+            <div class="media-card__preview-bg media-card__preview-bg--video"></div>
+            <div class="media-card__preview-overlay">
+              <div class="media-card__waves" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="media-card__placeholder-icon" aria-hidden="true">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                  <path d="M4 28 Q10 22 16 28 Q22 34 28 28 Q34 22 40 28" stroke="#6EE7FF" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  <path d="M4 22 Q10 16 16 22 Q22 28 28 22 Q34 16 40 22" stroke="#6EE7FF" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+                  <circle cx="20" cy="14" r="6" stroke="#C084FC" stroke-width="1.5" opacity="0.6"/>
+                </svg>
+              </div>
+              <p class="media-card__placeholder-text">Paisajes oceánicos en calma</p>
+              <span class="media-card__coming-soon">Próximamente</span>
+            </div>
+            <video id="relax-video" class="media-card__video" preload="none" aria-label="Video relajante" hidden>
+              <source src="assets/videos/relax-ocean.mp4" type="video/mp4" />
+              Tu navegador no soporta video HTML5.
+            </video>
+          </div>
+          <div class="media-card__controls">
+            <button class="media-btn media-btn--play" id="video-play-btn" data-media="video" aria-label="Reproducir video">
+              <span class="media-btn__icon">&#x25B6;</span>
+            </button>
+            <div class="media-bar">
+              <div class="media-bar__fill media-bar__fill--animated" id="video-bar"></div>
+            </div>
+            <button class="media-btn media-btn--mute" id="video-mute-btn" data-media="video" aria-label="Silenciar video">
+              <span class="media-btn__icon media-btn__icon--sound">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M3 6.5H1v5h2l4 3.5V3L3 6.5z" fill="currentColor"/>
+                  <path d="M12 9c0-1.66-1-3.08-2.5-3.73M15 9c0-3.31-2-6.16-5-7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div class="media-card__info">
+            <h3 class="media-card__title">Sonidos del Océano</h3>
+            <p class="media-card__desc">Un viaje visual a orillas de un mar en calma para liberar la tensión acumulada.</p>
+          </div>
+        </div>
+
+        <!-- VIDEO 2 -->
+        <div class="media-card media-card--forest glass-card" id="media-video-2">
+          <div class="media-card__badge">Video · Bosque</div>
+          <div class="media-card__preview" aria-label="Vista previa: Bosque tranquilo">
+            <div class="media-card__preview-bg media-card__preview-bg--forest"></div>
+            <div class="media-card__preview-overlay">
+              <div class="media-card__waves media-card__waves--forest" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="media-card__placeholder-icon" aria-hidden="true">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                  <path d="M20 6L8 24h24L20 6z" stroke="#52B788" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                  <path d="M20 16L10 30h20L20 16z" stroke="#52B788" stroke-width="1.5" fill="rgba(82,183,136,0.15)" stroke-linejoin="round"/>
+                  <rect x="17" y="30" width="6" height="6" rx="1" fill="#52B788" opacity="0.5"/>
+                </svg>
+              </div>
+              <p class="media-card__placeholder-text">Lluvia sobre el bosque</p>
+              <span class="media-card__coming-soon">Próximamente</span>
+            </div>
+            <video id="relax-video-2" class="media-card__video" preload="none" aria-label="Video bosque" hidden>
+              <source src="assets/videos/relax-forest.mp4" type="video/mp4" />
+              Tu navegador no soporta video HTML5.
+            </video>
+          </div>
+          <div class="media-card__controls">
+            <button class="media-btn media-btn--play" id="video-play-btn-2" data-media="video2" aria-label="Reproducir video bosque">
+              <span class="media-btn__icon">&#x25B6;</span>
+            </button>
+            <div class="media-bar">
+              <div class="media-bar__fill media-bar__fill--animated" id="video-bar-2"></div>
+            </div>
+            <button class="media-btn media-btn--mute" id="video-mute-btn-2" data-media="video2" aria-label="Silenciar video bosque">
+              <span class="media-btn__icon media-btn__icon--sound">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M3 6.5H1v5h2l4 3.5V3L3 6.5z" fill="currentColor"/>
+                  <path d="M12 9c0-1.66-1-3.08-2.5-3.73M15 9c0-3.31-2-6.16-5-7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div class="media-card__info">
+            <h3 class="media-card__title">Lluvia de Bosque</h3>
+            <p class="media-card__desc">Sonidos naturales de lluvia entre árboles para crear un ambiente de concentración profunda.</p>
+          </div>
+        </div>
+
+        <!-- VIDEO 3 -->
+        <div class="media-card media-card--sunset glass-card" id="media-video-3">
+          <div class="media-card__badge">Video · Atardecer</div>
+          <div class="media-card__preview" aria-label="Vista previa: Atardecer sereno">
+            <div class="media-card__preview-bg media-card__preview-bg--sunset"></div>
+            <div class="media-card__preview-overlay">
+              <div class="media-card__waves media-card__waves--sunset" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="media-card__placeholder-icon" aria-hidden="true">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                  <circle cx="20" cy="18" r="8" stroke="#FDBA74" stroke-width="1.5" opacity="0.8"/>
+                  <path d="M20 6V4M20 32v2M6 18H4M36 18h2M10.1 10.1L8.7 8.7M31.3 8.7l-1.4 1.4" stroke="#FDBA74" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                  <path d="M4 28 Q10 24 16 28 Q22 32 28 28 Q34 24 40 28" stroke="#FDBA74" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4"/>
+                </svg>
+              </div>
+              <p class="media-card__placeholder-text">Atardecer sobre el horizonte</p>
+              <span class="media-card__coming-soon">Próximamente</span>
+            </div>
+            <video id="relax-video-3" class="media-card__video" preload="none" aria-label="Video atardecer" hidden>
+              <source src="assets/videos/relax-sunset.mp4" type="video/mp4" />
+              Tu navegador no soporta video HTML5.
+            </video>
+          </div>
+          <div class="media-card__controls">
+            <button class="media-btn media-btn--play" id="video-play-btn-3" data-media="video3" aria-label="Reproducir video atardecer">
+              <span class="media-btn__icon">&#x25B6;</span>
+            </button>
+            <div class="media-bar">
+              <div class="media-bar__fill media-bar__fill--animated" id="video-bar-3"></div>
+            </div>
+            <button class="media-btn media-btn--mute" id="video-mute-btn-3" data-media="video3" aria-label="Silenciar video atardecer">
+              <span class="media-btn__icon media-btn__icon--sound">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M3 6.5H1v5h2l4 3.5V3L3 6.5z" fill="currentColor"/>
+                  <path d="M12 9c0-1.66-1-3.08-2.5-3.73M15 9c0-3.31-2-6.16-5-7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div class="media-card__info">
+            <h3 class="media-card__title">Atardecer Sereno</h3>
+            <p class="media-card__desc">Un cielo en llamas suaves que disuelve la tensión del día y te prepara para descansar.</p>
+          </div>
+        </div>
+
+      </div><!-- /.multimedia__grid -->
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       5. MINI JUEGO — WAVE CATCHER
+  ══════════════════════════════════════════════ -->
+  <section class="game" id="game" aria-labelledby="game-title">
+    <div class="section-container">
+
+      <header class="section-header">
+        <div class="section-header__badge">Mini Juego</div>
+        <h2 class="section-header__title" id="game-title">Wave Catcher</h2>
+        <p class="section-header__desc">Atrapa la calma, suelta el estrés.</p>
+      </header>
+
+      <div class="game__layout">
+
+        <!-- Game frame -->
+        <div class="game__frame-wrapper" aria-label="Área del mini juego Wave Catcher">
+          <div class="game__frame glass-card" id="game-frame">
+            <div class="game__placeholder" id="game-placeholder">
+              <!-- Background ocean animation -->
+              <div class="game__ocean" aria-hidden="true">
+                <div class="game__ocean-wave game__ocean-wave--1"></div>
+                <div class="game__ocean-wave game__ocean-wave--2"></div>
+                <div class="game__ocean-wave game__ocean-wave--3"></div>
+                <div class="game__stars" id="game-stars"></div>
+              </div>
+              <!-- Glowing orbs decoration -->
+              <div class="game__orbs" aria-hidden="true">
+                <div class="game__orb game__orb--a"></div>
+                <div class="game__orb game__orb--b"></div>
+                <div class="game__orb game__orb--c"></div>
+              </div>
+              <!-- Boat icon (SVG, no emoji) -->
+              <div class="game__boat" aria-hidden="true">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                  <path d="M8 32L24 16L40 32H8Z" fill="rgba(110,231,255,0.15)" stroke="#6EE7FF" stroke-width="1.2"/>
+                  <path d="M24 16V8" stroke="#C084FC" stroke-width="1.2" stroke-linecap="round"/>
+                  <path d="M24 8L32 14H24" fill="rgba(192,132,252,0.3)" stroke="#C084FC" stroke-width="1"/>
+                  <path d="M4 36 Q12 32 24 36 Q36 40 44 36" stroke="#6EE7FF" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+                </svg>
+              </div>
+              <!-- Content -->
+              <div class="game__placeholder-content">
+                <div class="game__logo-title">WAVE CATCHER</div>
+                <p class="game__placeholder-subtitle">El juego está en desarrollo.</p>
+                <p class="game__placeholder-desc">
+                  Muy pronto podrás navegar por océanos nocturnos, atrapar orbes de calma y escapar del estrés académico.
+                </p>
+                <div class="game__placeholder-features">
+                  <span>Orbes de calma</span>
+                  <span>Música relajante</span>
+                  <span>Efectos visuales</span>
+                </div>
+                <div class="game__placeholder-cta">
+                  <span class="badge-coming">Próximamente · p5.js</span>
+                </div>
+              </div>
+            </div>
+            <!-- Real iframe for game (hidden until ready) -->
+            <iframe
+              id="game-iframe"
+              class="game__iframe"
+              src="game/index.html"
+              title="Wave Catcher — Mini juego relajante"
+              allowfullscreen
+              loading="lazy"
+              aria-label="Mini juego Wave Catcher"
+              hidden
+            ></iframe>
+          </div>
+
+          <!-- Game controls bar -->
+          <div class="game__controls glass">
+            <button class="btn btn--ghost game__ctrl-btn" id="game-load-btn" aria-label="Cargar juego">
+              Cargar Juego
+            </button>
+            <button class="btn btn--ghost game__ctrl-btn" id="game-fullscreen-btn" aria-label="Pantalla completa">
+              Pantalla Completa
+            </button>
+            <div class="game__status" aria-live="polite">
+              <span class="game__status-dot"></span>
+              <span id="game-status-text">En desarrollo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game info sidebar -->
+        <div class="game__info">
+
+          <!-- How to play -->
+          <div class="game__how glass-card">
+            <h3 class="game__how-title">¿Cómo se juega?</h3>
+            <ol class="game__steps" role="list">
+              <li class="game__step">
+                <div class="game__step-icon">01</div>
+                <div>
+                  <strong>Recoge orbes de calma</strong>
+                  <p>Navega y recoge la mayor cantidad de orbes para aumentar tu puntuación.</p>
+                </div>
+              </li>
+              <li class="game__step">
+                <div class="game__step-icon">02</div>
+                <div>
+                  <strong>Evita los obstáculos</strong>
+                  <p>No toques las sombras. Te harán perder energía.</p>
+                </div>
+              </li>
+              <li class="game__step">
+                <div class="game__step-icon">03</div>
+                <div>
+                  <strong>Llena tu energía</strong>
+                  <p>Al alcanzar suficientes puntos, el escenario se iluminará y sentirás más calma.</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <!-- Features -->
+          <div class="game__features glass-card">
+            <h3 class="game__features-title">Características</h3>
+            <ul class="game__feature-list" role="list">
+              <li class="game__feature-item">
+                <div class="game__feature-dot"></div>
+                <div>
+                  <strong>Música relajante</strong>
+                  <p>Ambientes sonoros que te ayudan a concentrarte.</p>
+                </div>
+              </li>
+              <li class="game__feature-item">
+                <div class="game__feature-dot"></div>
+                <div>
+                  <strong>Efectos visuales suaves</strong>
+                  <p>Partículas y colores que transmiten tranquilidad.</p>
+                </div>
+              </li>
+              <li class="game__feature-item">
+                <div class="game__feature-dot"></div>
+                <div>
+                  <strong>Jugabilidad simple</strong>
+                  <p>Fácil de aprender, difícil de soltar.</p>
+                </div>
+              </li>
+              <li class="game__feature-item">
+                <div class="game__feature-dot"></div>
+                <div>
+                  <strong>Bienestar primero</strong>
+                  <p>Diseñado para reducir el estrés y promover pausas activas.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+        </div><!-- /.game__info -->
+      </div><!-- /.game__layout -->
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       6. FOOTER
+  ══════════════════════════════════════════════ -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer__glow" aria-hidden="true"></div>
+    <div class="footer__container">
+
+      <div class="footer__brand">
+        <div class="footer__logo">
+          <span aria-hidden="true">✦</span> Enfrentando el Estrés
+        </div>
+        <p class="footer__tagline">Una plataforma de bienestar para estudiantes de Ingeniería Multimedia de la UAO.</p>
+      </div>
+
+      <nav class="footer__nav" aria-label="Navegación del footer">
+        <h3 class="footer__nav-title">Secciones</h3>
+        <ul role="list">
+          <li><a href="#hero">Inicio</a></li>
+          <li><a href="#tasks">Mis Tareas</a></li>
+          <li><a href="#multimedia">Relajación</a></li>
+          <li><a href="#game">Wave Catcher</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer__team">
+        <h3 class="footer__nav-title">Equipo</h3>
+        <ul class="footer__team-list" role="list">
+          <li>Sofia Aguiar Arana</li>
+          <li>Mateo Lopez Vasquez</li>
+          <li>Catalina Ortiz Gonzalez</li>
+          <li>Emanuel Jimenez Nuñez</li>
+          <li>Alejandra Sepulveda Mojica</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="footer__bottom">
+      <p>© 2026 · Enfrentando el Estrés · Universidad Autónoma de Occidente</p>
+      <p>Proyecto académico · Arquitectura de Sistemas Multimedia</p>
+    </div>
+  </footer>
+
+  <!-- Toast notifications -->
+  <div class="toast-container" id="toast-container" role="status" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- Scripts (order matters) -->
+  <script src="js/tasks.js"></script>
+  <script src="js/multimedia.js"></script>
+  <script src="js/game-loader.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
+//hola 
