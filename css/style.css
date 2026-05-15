@@ -1496,7 +1496,10 @@ input, select, textarea { font-family: inherit; }
   letter-spacing: 0.04em;
 }
 
-/* Game iframe */
+/* Game iframe — Unity WebGL Build
+   El build de Unity se carga dentro de este iframe.
+   position:absolute + inset:0 garantiza que ocupe todo el .game__frame
+   sin generar overflow en ningún viewport. */
 .game__iframe {
   position: absolute;
   inset: 0;
@@ -1504,6 +1507,7 @@ input, select, textarea { font-family: inherit; }
   height: 100%;
   border: none;
   border-radius: var(--r-lg);
+  background: #0a0e2e; /* fondo oscuro mientras Unity carga */
 }
 
 /* Controls bar */

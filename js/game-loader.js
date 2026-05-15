@@ -3,17 +3,26 @@
    Enfrentando el Estrés · UAO Multimedia
    ─────────────────────────────────────
    Responsabilidades:
-   - Detectar si el juego (game/index.html) está disponible
-   - Mostrar placeholder elegante mientras no exista
-   - Gestionar la carga del iframe del juego
-   - Controlar pantalla completa
+   - Detectar si el juego Unity WebGL (game/index.html) está disponible
+   - Mostrar placeholder animado mientras el juego no exista
+   - Cargar el iframe de Unity WebGL al pulsar el botón
+   - Controlar pantalla completa (Fullscreen API)
    - Generar estrellas decorativas en el placeholder
+
+   Integración esperada (Unity WebGL Build):
+     /game/
+       index.html          ← punto de entrada del build
+       Build/              ← archivos .data, .wasm, .framework.js
+       TemplateData/       ← assets del template Unity
    ═══════════════════════════════════════════════════════════════ */
 
 const GameLoaderModule = (() => {
   'use strict';
 
   /* ─── CONFIG ─────────────────────────────────────────────────── */
+  // Punto de entrada del build Unity WebGL.
+  // Cuando el equipo exporte el juego, colocar el build en /game/
+  // y este loader lo detectará y habilitará el botón automáticamente.
   const GAME_SRC      = 'game/index.html';
   const STAR_COUNT    = 60;
   const STATUS_COLORS = {
@@ -93,6 +102,9 @@ const GameLoaderModule = (() => {
   }
 
   /* ─── CHECK GAME AVAILABILITY ────────────────────────────────── */
+  // Hace un HEAD request a game/index.html.
+  // Si el build Unity WebGL ya está en /game/, el botón se habilita.
+  // Si no, el botón queda deshabilitado y el placeholder permanece visible.
   function _checkGameAvailability() {
     fetch(GAME_SRC, { method: 'HEAD' })
       .then(res => {
@@ -135,6 +147,9 @@ const GameLoaderModule = (() => {
     DOM.loadBtn?.addEventListener('click', _loadGame);
     DOM.fullscreenBtn?.addEventListener('click', _toggleFullscreen);
 
+    // Escuchar mensajes postMessage desde el iframe de Unity WebGL.
+    // El build Unity puede enviar { type: 'WAVE_CATCHER_READY' }
+    // cuando el juego termine de inicializar (opcional, depende del build).
     window.addEventListener('message', (e) => {
       if (e.data?.type === 'WAVE_CATCHER_READY') {
         _updateStatus('ready');
@@ -144,6 +159,9 @@ const GameLoaderModule = (() => {
   }
 
   /* ─── LOAD GAME ──────────────────────────────────────────────── */
+  // Asigna el src al iframe para iniciar la carga del build Unity WebGL.
+  // Unity WebGL puede tardar varios segundos en inicializar;
+  // el estado "loading" permanece hasta que el iframe dispara el evento load.
   function _loadGame() {
     if (!gameAvailable) {
       window.AppModule?.toast('El juego aún está en desarrollo. Vuelve pronto.', 'info');

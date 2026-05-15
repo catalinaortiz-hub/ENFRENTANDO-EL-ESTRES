@@ -679,19 +679,18 @@
                   <span>Efectos visuales</span>
                 </div>
                 <div class="game__placeholder-cta">
-                  <span class="badge-coming">Próximamente · p5.js</span>
+                  <span class="badge-coming">Próximamente · Unity WebGL</span>
                 </div>
               </div>
             </div>
-            <!-- Real iframe for game (hidden until ready) -->
+            <!-- iframe Unity WebGL — src se asigna dinámicamente por game-loader.js al hacer clic en Cargar -->
             <iframe
               id="game-iframe"
               class="game__iframe"
-              src="game/index.html"
-              title="Wave Catcher — Mini juego relajante"
+              title="Wave Catcher — Mini juego Unity WebGL"
               allowfullscreen
-              loading="lazy"
-              aria-label="Mini juego Wave Catcher"
+              allow="autoplay; fullscreen"
+              aria-label="Mini juego Wave Catcher · Unity WebGL"
               hidden
             ></iframe>
           </div>

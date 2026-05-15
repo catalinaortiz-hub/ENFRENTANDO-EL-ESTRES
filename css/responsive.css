@@ -267,7 +267,8 @@ html, body {
     grid-template-columns: 1fr;
   }
 
-  .game__frame { min-height: 220px; aspect-ratio: 4 / 3; }
+  /* Unity WebGL — mantener 16/9 en móvil para no distorsionar el canvas */
+  .game__frame { min-height: 200px; aspect-ratio: 16 / 9; }
   .game__controls { flex-wrap: wrap; gap: 8px; }
   .game__logo-title { font-size: 1.2rem; }
 
