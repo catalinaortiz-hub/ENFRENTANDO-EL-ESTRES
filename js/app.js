@@ -4,9 +4,8 @@
    ─────────────────────────────────────
    Responsabilidades:
    - Inicialización de todos los módulos
-   - Control de la navbar (scroll + hamburger)
-   - Smooth scrolling y navegación entre secciones
-   - Animaciones de entrada (Intersection Observer)
+   - Control de la navbar (hamburger)
+   - Navegación SPA: muestra una sola sección a la vez
    - Sistema de toast notifications (auto-dismiss 5s)
    - Canvas de partículas de fondo
    ═══════════════════════════════════════════════════════════════ */
@@ -15,26 +14,25 @@ const AppModule = (() => {
   'use strict';
 
   /* ─── CONSTANTS ─────────────────────────────────────────────── */
-  const SCROLL_THRESHOLD = 60;    // px before navbar gets solid background
-  const TOAST_DURATION   = 5000;  // ms — auto-dismiss time
-  const TOAST_MAX        = 4;     // max toasts visible at once
-  const PARTICLE_COUNT   = 55;
+  const TOAST_DURATION = 5000;
+  const TOAST_MAX      = 4;
+  const PARTICLE_COUNT = 55;
+  const DEFAULT_VIEW   = 'tasks'; // primera pantalla al entrar
 
   /* ─── STATE ──────────────────────────────────────────────────── */
-  let particles = [];
-  let animFrame = null;
-  let canvasCtx = null;
-  let canvas    = null;
+  let particles  = [];
+  let animFrame  = null;
+  let canvasCtx  = null;
+  let canvas     = null;
+  let activeView = null;
 
   /* ─── INIT ───────────────────────────────────────────────────── */
   function init() {
     _initNavbar();
-    _initSmoothScroll();
-    _initSectionObserver();
+    _initSPANavigation();
     _initParticles();
-    _initActiveNavHighlight();
     // Sub-modules (TasksModule, MultimediaModule, GameLoaderModule)
-    // are initialized by AuthModule after a successful login.
+    // son inicializados por AuthModule tras el login exitoso.
   }
 
   /* ─── NAVBAR ─────────────────────────────────────────────────── */
@@ -45,18 +43,6 @@ const AppModule = (() => {
     const mobileLinks = mobileMenu?.querySelectorAll('.navbar__link');
 
     if (!navbar) return;
-
-    // Scroll: add/remove scrolled class
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          navbar.classList.toggle('scrolled', window.scrollY > SCROLL_THRESHOLD);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }, { passive: true });
 
     // Hamburger toggle
     hamburger?.addEventListener('click', () => {
@@ -94,69 +80,58 @@ const AppModule = (() => {
     });
   }
 
-  /* ─── SMOOTH SCROLL ──────────────────────────────────────────── */
-  function _initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', (e) => {
-        const targetId = anchor.getAttribute('href');
-        if (targetId === '#') return;
-
-        const target = document.querySelector(targetId);
-        if (!target) return;
-
-        e.preventDefault();
-        const navbarH = document.getElementById('navbar')?.offsetHeight || 72;
-        const targetY = target.getBoundingClientRect().top + window.scrollY - navbarH;
-        window.scrollTo({ top: targetY, behavior: 'smooth' });
-      });
+  /* ─── SPA NAVIGATION ─────────────────────────────────────────── */
+  /**
+   * Muestra una sola sección/vista a la vez.
+   * Añade clase `app-view--active` a la sección seleccionada
+   * y la quita de las demás. Hace fade-in suave.
+   */
+  function _initSPANavigation() {
+    // Delegar sobre el document para capturar links del footer también
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('[data-view]');
+      if (!link) return;
+      e.preventDefault();
+      const viewId = link.dataset.view;
+      if (viewId) showView(viewId);
     });
+
+    // Mostrar la vista por defecto al cargar
+    // (se llamará también desde AuthModule._showApp)
+    showView(DEFAULT_VIEW);
   }
 
-  /* ─── SECTION OBSERVER ───────────────────────────────────────── */
-  function _initSectionObserver() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('section--visible');
-          entry.target.querySelectorAll('.glass-card, .hero__stat, .media-card').forEach((el, i) => {
-            setTimeout(() => el.classList.add('card--visible'), i * 80);
-          });
-        }
-      });
-    }, { root: null, rootMargin: '0px 0px -80px 0px', threshold: 0.08 });
+  /**
+   * Cambia la vista activa.
+   * @param {string} viewId — id de la sección ('tasks' | 'multimedia' | 'game')
+   */
+  function showView(viewId) {
+    if (activeView === viewId) return;
+    activeView = viewId;
 
-    document.querySelectorAll('section').forEach(section => {
-      section.classList.add('section--hidden');
-      observer.observe(section);
+    const views   = document.querySelectorAll('.app-view');
+    const navLinks = document.querySelectorAll('[data-view]');
+
+    // Ocultar todas las vistas
+    views.forEach(v => {
+      v.classList.remove('app-view--active');
     });
 
-    // Hero always visible
-    const hero = document.getElementById('hero');
-    if (hero) {
-      hero.classList.remove('section--hidden');
-      hero.classList.add('section--visible');
+    // Mostrar la vista solicitada
+    const target = document.querySelector(`[data-view-section="${viewId}"]`);
+    if (target) {
+      // Forzar reflow para que la transición CSS funcione correctamente
+      requestAnimationFrame(() => {
+        target.classList.add('app-view--active');
+        // Scroll al top de la página al cambiar de vista
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      });
     }
-  }
 
-  /* ─── ACTIVE NAV HIGHLIGHT ───────────────────────────────────── */
-  function _initActiveNavHighlight() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.navbar__link[data-section]');
-
-    if (!sections.length || !navLinks.length) return;
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const id = entry.target.getAttribute('id');
-          navLinks.forEach(link => {
-            link.classList.toggle('navbar__link--active', link.dataset.section === id);
-          });
-        }
-      });
-    }, { rootMargin: '-40% 0px -55% 0px' });
-
-    sections.forEach(s => observer.observe(s));
+    // Actualizar estado activo en los links de navbar
+    navLinks.forEach(link => {
+      link.classList.toggle('navbar__link--active', link.dataset.view === viewId);
+    });
   }
 
   /* ─── PARTICLES CANVAS ───────────────────────────────────────── */
@@ -235,7 +210,7 @@ const AppModule = (() => {
   /* ─── TOAST SYSTEM ───────────────────────────────────────────── */
 
   /**
-   * Display a toast notification that auto-dismisses after TOAST_DURATION.
+   * Muestra una notificación toast que se cierra sola tras TOAST_DURATION.
    * @param {string} message
    * @param {'success'|'info'|'warning'|'error'} type
    */
@@ -243,7 +218,6 @@ const AppModule = (() => {
     const container = document.getElementById('toast-container');
     if (!container) return;
 
-    // Cap: remove oldest toast if at max
     const existing = container.querySelectorAll('.toast');
     if (existing.length >= TOAST_MAX) {
       _dismissToast(existing[0]);
@@ -256,26 +230,21 @@ const AppModule = (() => {
 
     container.appendChild(el);
 
-    // Trigger enter animation (double rAF ensures the transition fires)
     requestAnimationFrame(() => {
       requestAnimationFrame(() => el.classList.add('toast--visible'));
     });
 
-    // Auto-dismiss after TOAST_DURATION
     const timer = setTimeout(() => _dismissToast(el), TOAST_DURATION);
 
-    // Allow manual dismiss by clicking
     el.addEventListener('click', () => {
       clearTimeout(timer);
       _dismissToast(el);
     });
   }
 
-  /** Animate out then remove from DOM */
   function _dismissToast(el) {
     if (!el || !el.isConnected) return;
     el.classList.remove('toast--visible');
-    // Remove from DOM after transition ends (fallback: 400ms)
     const cleanup = () => el.remove();
     el.addEventListener('transitionend', cleanup, { once: true });
     setTimeout(cleanup, 400);
@@ -291,11 +260,11 @@ const AppModule = (() => {
   }
 
   /* ─── PUBLIC API ─────────────────────────────────────────────── */
-  return { init, toast };
+  return { init, toast, showView };
 })();
 
-/* Expose globally so sub-modules can call AppModule.toast() */
+/* Exponer globalmente para que sub-módulos puedan llamar AppModule.toast() */
 window.AppModule = AppModule;
 
-/* Bootstrap on DOM ready */
+/* Bootstrap al cargar el DOM */
 document.addEventListener('DOMContentLoaded', AppModule.init);

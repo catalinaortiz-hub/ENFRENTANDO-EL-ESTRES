@@ -2713,3 +2713,54 @@ body.menu-open {
   justify-content: center;
   animation: float 3s ease-in-out infinite;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   25. SPA VIEW NAVIGATION
+   Cada sección funciona como una pantalla independiente.
+   Solo la vista con .app-view--active es visible.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Por defecto todas las vistas están ocultas */
+.app-view {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  /* Cada sección ocupa al menos la altura de la ventana menos la navbar */
+  min-height: calc(100vh - 72px);
+}
+
+/* La vista activa se muestra con fade-in */
+.app-view--active {
+  display: block;
+  opacity: 1;
+}
+
+/* Quitar el margin-top extra que tenían las secciones para scroll landing */
+.tasks.app-view,
+.multimedia.app-view,
+.game.app-view {
+  margin-top: 0;
+  padding-top: calc(72px + 32px); /* navbar height + breathing room */
+}
+
+/* Eliminar el scroll indicator y el hero scroll hint (no aplica en SPA) */
+.hero__scroll {
+  display: none !important;
+}
+
+/* Asegurar que el body no haga scroll horizontal */
+.main-app {
+  overflow-x: hidden;
+}
+
+/* La navbar siempre visible — sin efecto scrolled dependiente del scroll */
+.navbar {
+  background: rgba(14, 18, 53, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Quitar el botón Comenzar si quedara algún rastro */
+.navbar__cta {
+  display: none !important;
+}

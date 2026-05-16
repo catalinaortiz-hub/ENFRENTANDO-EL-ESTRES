@@ -181,6 +181,10 @@
   <!-- CANVAS DE PARTÍCULAS DE FONDO -->
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
+  <!-- Hidden stat counters (referenced by tasks.js) -->
+  <span id="stat-pending" hidden></span>
+  <span id="stat-done" hidden></span>
+
   <!-- ══════════════════════════════════════════════
        1. NAVBAR
   ══════════════════════════════════════════════ -->
@@ -188,20 +192,17 @@
     <div class="navbar__container">
 
       <!-- Logo -->
-      <a href="#hero" class="navbar__logo" aria-label="Inicio">
+      <a href="#tasks" class="navbar__logo" data-view="tasks" aria-label="Ir a Mis Tareas">
         <span class="navbar__logo-icon" aria-hidden="true">✦</span>
         <span class="navbar__logo-text">Enfrentando el <strong>Estrés</strong></span>
       </a>
 
       <!-- Links -->
       <ul class="navbar__links" id="navbar-links" role="list">
-        <li><a href="#tasks"      class="navbar__link" data-section="tasks">Mis Tareas</a></li>
-        <li><a href="#multimedia" class="navbar__link" data-section="multimedia">Relajación</a></li>
-        <li><a href="#game"       class="navbar__link" data-section="game">Mini Juego</a></li>
+        <li><a href="#tasks"      class="navbar__link" data-view="tasks">Mis Tareas</a></li>
+        <li><a href="#multimedia" class="navbar__link" data-view="multimedia">Relajación</a></li>
+        <li><a href="#game"       class="navbar__link" data-view="game">Mini Juego</a></li>
       </ul>
-
-      <!-- CTA -->
-      <a href="#tasks" class="navbar__cta btn btn--glow">Comenzar</a>
 
       <!-- User menu (visible tras login) -->
       <div class="nav-user-menu hidden" id="nav-user-menu">
@@ -218,9 +219,9 @@
     <!-- Mobile menu -->
     <div class="navbar__mobile" id="mobile-menu" aria-hidden="true">
       <ul role="list">
-        <li><a href="#tasks"      class="navbar__link" data-section="tasks">Mis Tareas</a></li>
-        <li><a href="#multimedia" class="navbar__link" data-section="multimedia">Relajación</a></li>
-        <li><a href="#game"       class="navbar__link" data-section="game">Mini Juego</a></li>
+        <li><a href="#tasks"      class="navbar__link" data-view="tasks">Mis Tareas</a></li>
+        <li><a href="#multimedia" class="navbar__link" data-view="multimedia">Relajación</a></li>
+        <li><a href="#game"       class="navbar__link" data-view="game">Mini Juego</a></li>
       </ul>
       <!-- Usuario + Salir en móvil -->
       <div class="navbar__mobile-user hidden" id="mobile-user-menu">
@@ -231,85 +232,9 @@
   </nav>
 
   <!-- ══════════════════════════════════════════════
-       2. HERO
-  ══════════════════════════════════════════════ -->
-  <section class="hero" id="hero" aria-labelledby="hero-title">
-
-    <!-- Decorative orbs -->
-    <div class="hero__orb hero__orb--1" aria-hidden="true"></div>
-    <div class="hero__orb hero__orb--2" aria-hidden="true"></div>
-    <div class="hero__orb hero__orb--3" aria-hidden="true"></div>
-
-    <div class="hero__content">
-      <div class="hero__badge">Ingeniería Multimedia · UAO</div>
-      <h1 class="hero__title" id="hero-title">
-        Enfrenta el<br />
-        <span class="hero__title-accent">Estrés</span><br />
-        <span class="hero__title-sub">con calma y claridad</span>
-      </h1>
-      <p class="hero__desc">
-        Una plataforma pensada para estudiantes que necesitan organizar sus
-        actividades, relajarse con contenido multimedia y disfrutar de un
-        momento de paz entre clases.
-      </p>
-      <div class="hero__actions">
-        <a href="#tasks"      class="btn btn--primary btn--glow">Organizar Tareas</a>
-        <a href="#multimedia" class="btn btn--ghost">Relajarme</a>
-      </div>
-
-      <!-- Stats cards -->
-      <div class="hero__stats">
-        <div class="hero__stat glass">
-          <span class="hero__stat-number" id="stat-pending">0</span>
-          <span class="hero__stat-label">Tareas pendientes</span>
-        </div>
-        <div class="hero__stat glass">
-          <span class="hero__stat-number" id="stat-done">0</span>
-          <span class="hero__stat-label">Completadas</span>
-        </div>
-        <div class="hero__stat glass">
-          <span class="hero__stat-number">3</span>
-          <span class="hero__stat-label">Módulos activos</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Hero visual -->
-    <div class="hero__visual" aria-hidden="true">
-      <div class="hero__visual-ring hero__visual-ring--1"></div>
-      <div class="hero__visual-ring hero__visual-ring--2"></div>
-      <div class="hero__visual-ring hero__visual-ring--3"></div>
-      <div class="hero__visual-core">
-        <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
-          <circle cx="28" cy="28" r="22" stroke="#6EE7FF" stroke-width="1.5" opacity="0.6"/>
-          <path d="M28 8 C18 16 10 22 10 30 C10 40 18 48 28 48 C38 48 46 40 46 30 C46 22 38 16 28 8Z" fill="url(#waveGrad)" opacity="0.85"/>
-          <path d="M16 34 Q22 28 28 34 Q34 40 40 34" stroke="#6EE7FF" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-          <path d="M14 28 Q20 22 26 28 Q32 34 38 28" stroke="#C084FC" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.7"/>
-          <defs>
-            <linearGradient id="waveGrad" x1="28" y1="8" x2="28" y2="48" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#5B4BDB" stop-opacity="0.6"/>
-              <stop offset="100%" stop-color="#6EE7FF" stop-opacity="0.3"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
-      <div class="hero__visual-dots">
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
-      </div>
-    </div>
-
-    <!-- Scroll indicator -->
-    <div class="hero__scroll" aria-label="Desplazar hacia abajo">
-      <span class="hero__scroll-line"></span>
-      <span class="hero__scroll-text">Explorar</span>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════════
        3. GESTIÓN DE TAREAS
   ══════════════════════════════════════════════ -->
-  <section class="tasks" id="tasks" aria-labelledby="tasks-title">
+  <section class="tasks app-view" id="tasks" data-view-section="tasks" aria-labelledby="tasks-title">
     <div class="section-container">
 
       <header class="section-header">
@@ -472,7 +397,7 @@
   <!-- ══════════════════════════════════════════════
        4. MULTIMEDIA RELAJANTE
   ══════════════════════════════════════════════ -->
-  <section class="multimedia" id="multimedia" aria-labelledby="multimedia-title">
+  <section class="multimedia app-view" id="multimedia" data-view-section="multimedia" aria-labelledby="multimedia-title">
     <div class="section-container">
 
       <header class="section-header">
@@ -629,7 +554,7 @@
   <!-- ══════════════════════════════════════════════
        5. MINI JUEGO — WAVE CATCHER
   ══════════════════════════════════════════════ -->
-  <section class="game" id="game" aria-labelledby="game-title">
+  <section class="game app-view" id="game" data-view-section="game" aria-labelledby="game-title">
     <div class="section-container">
 
       <header class="section-header">
@@ -798,10 +723,9 @@
       <nav class="footer__nav" aria-label="Navegación del footer">
         <h3 class="footer__nav-title">Secciones</h3>
         <ul role="list">
-          <li><a href="#hero">Inicio</a></li>
-          <li><a href="#tasks">Mis Tareas</a></li>
-          <li><a href="#multimedia">Relajación</a></li>
-          <li><a href="#game">Wave Catcher</a></li>
+          <li><a href="#tasks"      class="navbar__link" data-view="tasks">Mis Tareas</a></li>
+          <li><a href="#multimedia" class="navbar__link" data-view="multimedia">Relajación</a></li>
+          <li><a href="#game"       class="navbar__link" data-view="game">Wave Catcher</a></li>
         </ul>
       </nav>
 
