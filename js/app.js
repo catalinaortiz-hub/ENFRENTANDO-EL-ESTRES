@@ -125,6 +125,17 @@ const AppModule = (() => {
         target.classList.add('app-view--active');
         // Scroll al top de la página al cambiar de vista
         window.scrollTo({ top: 0, behavior: 'instant' });
+        
+        // IMPORTANTE: Si es la vista del juego, dar foco al iframe
+        // para que capture inputs correctamente
+        if (viewId === 'game') {
+          setTimeout(() => {
+            const iframe = document.getElementById('game-iframe');
+            if (iframe && !iframe.hidden) {
+              iframe.focus();
+            }
+          }, 100);
+        }
       });
     }
 

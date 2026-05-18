@@ -1430,6 +1430,9 @@ input, select, textarea { font-family: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
+  /* Nota: pointer-events: none evita que el placeholder bloquee eventos del iframe
+     incluso si está visualmente visible durante la transición. */
 }
 
 .game__placeholder-content {
@@ -1508,6 +1511,14 @@ input, select, textarea { font-family: inherit; }
   border: none;
   border-radius: var(--r-lg);
   background: #0a0e2e; /* fondo oscuro mientras Unity carga */
+  pointer-events: auto;
+  /* Asegurar que el iframe siempre reciba eventos */
+}
+
+/* Cuando el placeholder está oculto, asegurar que no bloquee nada */
+.game__placeholder[hidden] {
+  pointer-events: none !important;
+  display: none !important;
 }
 
 /* Controls bar */

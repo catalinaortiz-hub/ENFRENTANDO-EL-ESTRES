@@ -23,6 +23,9 @@ const GameLoaderModule = (() => {
   // Punto de entrada del build Unity WebGL.
   // Cuando el equipo exporte el juego, colocar el build en /game/
   // y este loader lo detectará y habilitará el botón automáticamente.
+  
+  // Para GitHub Pages: la ruta relativa se resuelve correctamente
+  // si la carpeta "game" está en el mismo nivel que index.html
   const GAME_SRC      = 'game/index.html';
   const STAR_COUNT    = 60;
   const STATUS_COLORS = {
@@ -30,6 +33,17 @@ const GameLoaderModule = (() => {
     loading:     '#FDBA74',
     unavailable: '#C084FC',
   };
+  
+  // Función para normalizar la ruta (compatible con GitHub Pages y localhost)
+  function _getGamePath() {
+    // Si ya es una URL absoluta, devolverla tal cual
+    if (GAME_SRC.startsWith('http')) {
+      return GAME_SRC;
+    }
+    // Si es una ruta relativa, construirla desde la raíz del proyecto
+    // El navegador resuelve 'game/index.html' automáticamente
+    return GAME_SRC;
+  }
 
   /* ─── STATE ──────────────────────────────────────────────────── */
   let gameAvailable = false;
@@ -106,7 +120,8 @@ const GameLoaderModule = (() => {
   // Si el build Unity WebGL ya está en /game/, el botón se habilita.
   // Si no, el botón queda deshabilitado y el placeholder permanece visible.
   function _checkGameAvailability() {
-    fetch(GAME_SRC, { method: 'HEAD' })
+    const gamePath = _getGamePath();
+    fetch(gamePath, { method: 'HEAD' })
       .then(res => {
         gameAvailable = res.ok;
         _updateStatus(gameAvailable ? 'ready' : 'unavailable');
@@ -162,6 +177,9 @@ const GameLoaderModule = (() => {
   // Asigna el src al iframe para iniciar la carga del build Unity WebGL.
   // Unity WebGL puede tardar varios segundos en inicializar;
   // el estado "loading" permanece hasta que el iframe dispara el evento load.
+  // 
+  // IMPORTANTE: Después de cargar, damos foco explícito al iframe
+  // para que capture teclado y mouse correctamente.
   function _loadGame() {
     if (!gameAvailable) {
       window.AppModule?.toast('El juego aún está en desarrollo. Vuelve pronto.', 'info');
@@ -176,7 +194,8 @@ const GameLoaderModule = (() => {
     _updateStatus('loading');
 
     if (DOM.iframe) {
-      DOM.iframe.src = GAME_SRC;
+      const gamePath = _getGamePath();
+      DOM.iframe.src = gamePath;
 
       DOM.iframe.addEventListener('load', () => {
         gameLoaded = true;
@@ -195,11 +214,14 @@ const GameLoaderModule = (() => {
   }
 
   /* ─── SHOW IFRAME ────────────────────────────────────────────── */
+  // Hacer visible el iframe y ocultar el placeholder.
+  // CRÍTICO: Dar foco explícito al iframe para que capture inputs correctamente.
   function _showIframe() {
     if (!DOM.iframe || !DOM.placeholder) return;
 
     DOM.placeholder.style.opacity    = '0';
     DOM.placeholder.style.transition = 'opacity 0.4s ease';
+    DOM.placeholder.style.pointerEvents = 'none';  // Prevenir eventos durante transición
 
     setTimeout(() => {
       DOM.placeholder.hidden        = true;
@@ -208,6 +230,9 @@ const GameLoaderModule = (() => {
       DOM.iframe.style.transition   = 'opacity 0.4s ease';
       requestAnimationFrame(() => {
         DOM.iframe.style.opacity = '1';
+        // *** CRÍTICO: Dar foco al iframe después de hacerlo visible ***
+        // Esto permite que Unity WebGL capture teclado y mouse correctamente
+        DOM.iframe.focus();
       });
     }, 400);
 
@@ -221,11 +246,15 @@ const GameLoaderModule = (() => {
   /* ─── RELOAD GAME ────────────────────────────────────────────── */
   function _reloadGame() {
     if (!DOM.iframe) return;
-    DOM.iframe.src = GAME_SRC;
+    const gamePath = _getGamePath();
+    DOM.iframe.src = gamePath;
     window.AppModule?.toast('Reiniciando Wave Catcher...', 'info');
+    // Dar foco después de recargar
+    setTimeout(() => DOM.iframe?.focus(), 100);
   }
 
   /* ─── FULLSCREEN ─────────────────────────────────────────────── */
+  // Manejo mejorado: restaurar foco en el iframe después de fullscreen
   function _toggleFullscreen() {
     const el   = DOM.frame;
     if (!el) return;
@@ -240,6 +269,8 @@ const GameLoaderModule = (() => {
 
       request?.then?.(() => {
         if (DOM.fullscreenBtn) DOM.fullscreenBtn.textContent = 'Salir de Pantalla Completa';
+        // Dar foco al iframe cuando entra fullscreen
+        setTimeout(() => DOM.iframe?.focus(), 100);
       }).catch(() => {
         window.AppModule?.toast('Tu navegador no permite pantalla completa aquí.', 'warning');
       });
@@ -250,6 +281,8 @@ const GameLoaderModule = (() => {
 
       exit?.then?.(() => {
         if (DOM.fullscreenBtn) DOM.fullscreenBtn.textContent = 'Pantalla Completa';
+        // Restaurar foco al iframe cuando sale de fullscreen
+        setTimeout(() => DOM.iframe?.focus(), 100);
       });
     }
   }

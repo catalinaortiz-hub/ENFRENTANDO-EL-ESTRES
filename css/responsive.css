@@ -419,3 +419,47 @@ html, body {
     padding-top: calc(60px + 20px);
   }
 }
+
+/* ─── GAME IFRAME — WebGL INPUT FIX ────────────────────────────── */
+/* Estas reglas aseguran que el canvas Unity reciba todos los eventos
+   de teclado, mouse y touch correctamente en todos los dispositivos. */
+
+/* En todos los tamaños: el iframe siempre debe recibir eventos */
+.game__iframe {
+  touch-action: none;       /* Evita que el navegador intercepte gestos táctiles
+                               antes de que lleguen al canvas de Unity */
+  user-select: none;        /* Evita selección de texto accidental al hacer drag */
+  -webkit-user-select: none;
+  pointer-events: auto;     /* Siempre recibe eventos (refuerza style.css) */
+}
+
+/* En tablet y móvil: el contenedor no debe recortar eventos touch */
+@media (max-width: 820px) {
+  .game__frame {
+    touch-action: none;     /* El contenedor tampoco intercepta gestos */
+    overflow: visible;      /* No cortar eventos en los bordes */
+  }
+
+  .game__frame-wrapper {
+    touch-action: none;
+  }
+
+  /* En tablet: altura mínima más generosa para el canvas WebGL */
+  .game__iframe {
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 560px) {
+  /* En móvil: mantener proporciones 16/9 para Unity */
+  .game__iframe {
+    min-height: 200px;
+  }
+
+  /* El contenedor padre tampoco debe bloquear touch */
+  .game__frame-wrapper,
+  .game__frame {
+    touch-action: none;
+    -webkit-overflow-scrolling: auto; /* Evitar scroll inercia que interfiere */
+  }
+}
