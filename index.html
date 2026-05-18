@@ -610,13 +610,14 @@
             </div>
             <!-- iframe Unity WebGL — src se asigna dinámicamente por game-loader.js al hacer clic en Cargar -->
             <iframe
-              id="game-iframe"
-              class="game__iframe"
-              title="Wave Catcher — Mini juego Unity WebGL"
-              allowfullscreen
-              allow="autoplay; fullscreen"
-              aria-label="Mini juego Wave Catcher · Unity WebGL"
-              hidden
+                id="game-iframe"
+                class="game__iframe"
+                src="game/index.html"
+                title="Wave Catcher — Unity WebGL"
+                allowfullscreen
+                allow="autoplay; fullscreen; gamepad"
+                tabindex="0"
+                style="pointer-events:auto;"
             ></iframe>
           </div>
 
