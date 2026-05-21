@@ -18,21 +18,21 @@ const MultimediaModule = (() => {
       muteBtnId: 'video-mute-btn',
       barId:     'video-bar',
       videoId:   'relax-video',
-      label:     'Sonidos del Océano',
+      label:     'Respiración Profunda',
     },
     {
       playBtnId: 'video-play-btn-2',
       muteBtnId: 'video-mute-btn-2',
       barId:     'video-bar-2',
       videoId:   'relax-video-2',
-      label:     'Lluvia de Bosque',
+      label:     'Respiración en Caja',
     },
     {
       playBtnId: 'video-play-btn-3',
       muteBtnId: 'video-mute-btn-3',
       barId:     'video-bar-3',
       videoId:   'relax-video-3',
-      label:     'Atardecer Sereno',
+      label:     'Relajación Guiada',
     },
   ];
 
