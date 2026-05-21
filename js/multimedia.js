@@ -4,8 +4,8 @@
    ─────────────────────────────────────
    Responsabilidades:
    - Controles de reproducción para 3 tarjetas de video
-   - Barra de progreso animada como placeholder
-   - Los videos reales se agregan más adelante en /assets/videos/
+   - Barra de progreso sincronizada con el video real
+   - Play / Pause / Mute funcionales
    ═══════════════════════════════════════════════════════════════ */
 
 const MultimediaModule = (() => {
@@ -18,21 +18,21 @@ const MultimediaModule = (() => {
       muteBtnId: 'video-mute-btn',
       barId:     'video-bar',
       videoId:   'relax-video',
-      label:     'Sonidos del Océano',
+      label:     'Respiración Profunda',
     },
     {
       playBtnId: 'video-play-btn-2',
       muteBtnId: 'video-mute-btn-2',
       barId:     'video-bar-2',
       videoId:   'relax-video-2',
-      label:     'Lluvia de Bosque',
+      label:     'Respiración en Caja',
     },
     {
       playBtnId: 'video-play-btn-3',
       muteBtnId: 'video-mute-btn-3',
       barId:     'video-bar-3',
       videoId:   'relax-video-3',
-      label:     'Atardecer Sereno',
+      label:     'Relajación Guiada',
     },
   ];
 
@@ -69,17 +69,31 @@ const MultimediaModule = (() => {
 
     state[cfg.playBtnId] = { playing: false, muted: false };
 
-    // Play / pause
+    // ── Play / Pause ──────────────────────────────────────────────
     playBtn.addEventListener('click', () => {
       const s = state[cfg.playBtnId];
-      s.playing = !s.playing;
-      _updatePlayBtn(playBtn, s.playing);
 
-      if (videoEl && !videoEl.hidden) {
-        s.playing ? videoEl.play().catch(() => {}) : videoEl.pause();
+      if (videoEl) {
+        // Video real disponible: usar la API nativa
+        if (s.playing) {
+          videoEl.pause();
+          s.playing = false;
+        } else {
+          // play() devuelve Promise; manejar rechazo silenciosamente
+          videoEl.play().catch(() => {});
+          s.playing = true;
+        }
+      } else {
+        // Sin video: solo actualizar estado visual
+        s.playing = !s.playing;
       }
 
-      if (barFill) barFill.classList.toggle('playing', s.playing);
+      _updatePlayBtn(playBtn, s.playing);
+
+      // Barra de progreso: animación CSS de placeholder si no hay video real
+      if (barFill && !videoEl) {
+        barFill.classList.toggle('playing', s.playing);
+      }
 
       window.AppModule?.toast(
         s.playing ? `Reproduciendo: ${cfg.label}` : `Pausado: ${cfg.label}`,
@@ -87,7 +101,7 @@ const MultimediaModule = (() => {
       );
     });
 
-    // Mute / unmute
+    // ── Mute / Unmute ─────────────────────────────────────────────
     muteBtn?.addEventListener('click', () => {
       const s = state[cfg.playBtnId];
       s.muted = !s.muted;
@@ -98,20 +112,54 @@ const MultimediaModule = (() => {
       muteBtn.setAttribute('aria-label', s.muted ? 'Activar sonido' : 'Silenciar');
     });
 
-    // Sync real video events
+    // ── Sincronización con el video real ──────────────────────────
     if (videoEl) {
+      // Quitar la animación CSS de placeholder: la barra usará timeupdate
+      if (barFill) {
+        barFill.classList.remove('media-bar__fill--animated');
+        barFill.style.width = '0%';
+      }
+
+      // Actualizar barra con la posición real del video
       videoEl.addEventListener('timeupdate', () => {
-        if (videoEl.duration && barFill) {
+        if (barFill && videoEl.duration && !isNaN(videoEl.duration)) {
           const pct = (videoEl.currentTime / videoEl.duration) * 100;
           barFill.style.width = `${pct}%`;
         }
       });
 
+      // Al terminar el video: resetear estado
       videoEl.addEventListener('ended', () => {
         const s = state[cfg.playBtnId];
         s.playing = false;
         _updatePlayBtn(playBtn, false);
-        if (barFill) barFill.classList.remove('playing');
+        if (barFill) barFill.style.width = '0%';
+      });
+
+      // Si el video se pausa externamente (ej. otro tab o error)
+      videoEl.addEventListener('pause', () => {
+        const s = state[cfg.playBtnId];
+        if (s.playing) {
+          s.playing = false;
+          _updatePlayBtn(playBtn, false);
+        }
+      });
+
+      // Si el video arranca a reproducirse externamente
+      videoEl.addEventListener('play', () => {
+        const s = state[cfg.playBtnId];
+        if (!s.playing) {
+          s.playing = true;
+          _updatePlayBtn(playBtn, true);
+        }
+      });
+
+      // Si hay error de carga, degradar a barra animada de placeholder
+      videoEl.addEventListener('error', () => {
+        if (barFill) {
+          barFill.classList.add('media-bar__fill--animated');
+        }
+        console.warn(`[MultimediaModule] No se pudo cargar el video: ${cfg.videoId}`);
       });
     }
   }
